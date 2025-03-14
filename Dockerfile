@@ -1,7 +1,7 @@
-FROM lukemathwalker/cargo-chef:latest-rust-1.85.0 as chef
+FROM lukemathwalker/cargo-chef:latest-rust-1.85.0 AS chef
 WORKDIR /app
 RUN apt update && apt install lld clang -y
-FROM chef as planner
+FROM chef AS planner
 COPY . .
 # Compute a lock-like file for our project
 RUN cargo chef prepare --recipe-path recipe.json
@@ -17,7 +17,7 @@ ENV SQLX_OFFLINE=true
 RUN cargo build --release --bin zero2prod
 
 # Runtime stage
-FROM rust:1.85.0-slim AS runtime
+FROM rust:1.85.0-slim-bookworm AS runtime
 WORKDIR /app
 # Copy the compiled binary from the builder environment
 # to our runtime environment
